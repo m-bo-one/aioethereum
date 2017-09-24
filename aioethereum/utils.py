@@ -1,8 +1,8 @@
 from .constants import BLOCK_TAGS
 
 
-def str_to_hex(string):
-    return '0x' + str(string)
+def add_0x(string):
+    return '0x{0}'.format(string)
 
 
 def hex_to_dec(x):

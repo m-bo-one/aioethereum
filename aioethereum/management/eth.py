@@ -1,3 +1,4 @@
+import warnings
 import asyncio
 
 from ..utils import hex_to_dec, validate_block
@@ -291,6 +292,7 @@ class EthMixin:
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getcompilers
         DEPRECATED
         """
+        warnings.warn('deprecated', DeprecationWarning)
         result = yield from self._call('eth_getCompilers')
         return result
 
@@ -299,6 +301,7 @@ class EthMixin:
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compilesolidity
         DEPRECATED
         """
+        warnings.warn('deprecated', DeprecationWarning)
         result = yield from self._call('eth_compileSolidity', [code])
         return result
 
@@ -307,6 +310,7 @@ class EthMixin:
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compilelll
         DEPRECATED
         """
+        warnings.warn('deprecated', DeprecationWarning)
         result = yield from self._call('eth_compileLLL', [code])
         return result
 
@@ -315,6 +319,7 @@ class EthMixin:
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compileserpent
         DEPRECATED
         """
+        warnings.warn('deprecated', DeprecationWarning)
         result = yield from self._call('eth_compileSerpent', [code])
         return result
 
@@ -324,8 +329,8 @@ class EthMixin:
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter
         """
         obj = {
-            'fromBlock': from_block,
-            'toBlock': to_block,
+            'fromBlock': validate_block(from_block),
+            'toBlock': validate_block(to_block),
         }
         if address:
             obj['address'] = address
@@ -376,8 +381,8 @@ class EthMixin:
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getlogs
         """
         obj = {
-            'fromBlock': from_block,
-            'toBlock': to_block,
+            'fromBlock': validate_block(from_block),
+            'toBlock': validate_block(to_block),
         }
         if address:
             obj['address'] = address

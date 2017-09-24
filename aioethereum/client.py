@@ -10,13 +10,15 @@ except ImportError:
     import json
 
 from .errors import BadResponseError, BadStatusError, BadJsonError
-from .management import EthMixin, NetMixin, PersonalMixin, Web3Mixin
+from .management import (
+    DbMixin, EthMixin, NetMixin, PersonalMixin, ShhMixin, Web3Mixin)
 
 
 logger = logging.getLogger('asyncio_client')
 
 
-class AsyncIOClient(EthMixin, NetMixin, PersonalMixin, Web3Mixin):
+class AsyncIOClient(DbMixin, EthMixin, NetMixin, PersonalMixin,
+                    ShhMixin, Web3Mixin):
 
     def __init__(self, host='127.0.0.1', port=8545, tls=False,
                  timeout=60, *, loop=None):
