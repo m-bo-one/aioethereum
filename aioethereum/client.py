@@ -10,15 +10,52 @@ except ImportError:
     import json
 
 from .errors import BadResponseError, BadStatusError, BadJsonError
-from .management import (
-    DbMixin, EthMixin, NetMixin, PersonalMixin, ShhMixin, Web3Mixin)
+from .management import RpcMixin
 
 
 logger = logging.getLogger('asyncio_client')
 
 
-class AsyncIOClient(DbMixin, EthMixin, NetMixin, PersonalMixin,
-                    ShhMixin, Web3Mixin):
+class AsyncIOIPCClient(RpcMixin):
+
+    def __init__(self, unix_path, timeout=60, *, loop=None):
+        self.unix_path = unix_path
+        self._timeout = timeout
+        self._id = 1
+        self._loop = loop or asyncio.get_event_loop()
+
+    @asyncio.coroutine
+    def _call(self, method, params=None, _id=None):
+        params = params or []
+        data = {
+            'jsonrpc': '2.0',
+            'method': method,
+            'params': params,
+            'id': _id or self._id,
+        }
+        with (yield from self._lock):
+            self._writer.write(json.dumps(data).encode('utf-8'))
+            b = yield from self._reader.readline()
+            if not b:
+                self._log.error('_receive: no data, connection refused.')
+                raise ConnectionError('Didn\'t receive any data, '
+                                      'connection refused.')
+
+        try:
+            response = json.loads(b.decode('utf-8'))
+        except ValueError:
+            raise BadJsonError('Invalid received json from node.')
+
+        if not _id:
+            self._id += 1
+        try:
+            return response['result']
+        except KeyError:
+            raise BadResponseError(response['error']['message'],
+                                   response['error']['code'])
+
+
+class AsyncIOHTTPClient(RpcMixin):
 
     def __init__(self, host='127.0.0.1', port=8545, tls=False,
                  timeout=60, *, loop=None):
@@ -59,7 +96,7 @@ class AsyncIOClient(DbMixin, EthMixin, NetMixin, PersonalMixin,
             raise BadStatusError(r.status)
 
         try:
-            response = yield from r.json()
+            response = yield from r.json(loads=json.loads)
         except ValueError:
             raise BadJsonError('Invalid received json from node.')
 
