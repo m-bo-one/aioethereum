@@ -1,7 +1,9 @@
 aioethereum
-========
+===========
 
-asyncio (PEP 3156) Ethereum RPC client library.
+Ethereum RPC client library for the `PEP 3156`_ Python event loop.
+
+.. _PEP 3156: http://legacy.python.org/dev/peps/pep-3156/
 
 Features
 --------
@@ -14,7 +16,7 @@ Unix domain socket (IPC) support    Yes
 SSL/TLS support                     Yes
 Tested CPython versions             `3.4, 3.5, 3.6`
 Tested for Geth node                `1.7.0`
-Implemented RPC apis                `admin, db, debug, eth, miner, net, personal, shh, txpool, web3`
+Implemented RPC apis                `db, eth, miner, net, personal, shh, txpool, web3`
 ================================  ==============================
 
 Documentation
@@ -25,7 +27,7 @@ http://aioethereum.readthedocs.io/
 Usage examples
 --------------
 
-Simple high-level interface (through HTTP(S)):
+Simple high-level interface (through HTTP):
 
 .. code:: python
 
@@ -69,12 +71,14 @@ Requirements
 * Python_ 3.3+
 * asyncio_ or Python_ 3.4+
 * ujson_
+* aiohttp_
 
 .. note::
 
     ujson is preferred requirement.
     Pure C JSON encoder and decoder is implemented as well and can be used
     automatically when installed.
+
 
 License
 -------
@@ -83,4 +87,13 @@ The aioethereum is offered under MIT license.
 
 .. _Python: https://www.python.org
 .. _asyncio: https://pypi.python.org/pypi/asyncio
+.. _aiohttp: https://pypi.python.org/pypi/aiohttp
 .. _ujson: https://pypi.python.org/pypi/ujson
+
+
+TODO
+----
+
+* Add tests for all management RPC apis
+* Add admin and debug apis
+* Add sphinx docs

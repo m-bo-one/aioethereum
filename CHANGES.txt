@@ -1,0 +1,13 @@
+Changes
+-------
+
+0.1.0 (2017-09-30)
+^^^^^^^^^^^^^^^^^^
+
+**NEW**:
+
+* Add HTTP(s) and IPC clients for ethereum nodes;
+
+* Implement RPC apis - db, eth, miner, net, personal, shh, txpool, web3;
+
+* Add ujson encoder/decoder;
