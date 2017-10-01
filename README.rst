@@ -98,7 +98,6 @@ TODO
 
 * Add tests for all management RPC apis
 * Add admin and debug apis
-* Add sphinx docs
 
 
 .. |pypi| image:: https://img.shields.io/pypi/v/aioethereum.svg?style=flat&label=latest%20version
