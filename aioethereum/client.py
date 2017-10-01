@@ -1,6 +1,13 @@
 import logging
 import asyncio
+import abc
 from urllib.parse import urlparse
+
+try:
+    from abc import ABC
+except ImportError:
+    class ABC(metaclass=abc.ABCMeta):
+        pass
 
 import aiohttp
 import async_timeout
@@ -20,8 +27,19 @@ logger = logging.getLogger('asyncio_client')
 _reconnect_times = 3
 
 
-class AsyncIOIPCClient(RpcMixin):
+class BaseAsyncIOClient(ABC):
+    """Abstract class for creating client.
     """
+
+    @abc.abstractmethod
+    def _call(self, method, params=None, _id=None):
+        """Implements RPC 2.0 call to node server.
+        """
+
+
+class AsyncIOIPCClient(BaseAsyncIOClient, RpcMixin):
+    """Creates AsyncIOIPCClient client to communicate via IPC.
+
     :param reader: Instance of the stream reader
     :type reader: :class:`asyncio.streams.StreamReader`
 
@@ -31,11 +49,12 @@ class AsyncIOIPCClient(RpcMixin):
     :param unix_path: Unix domain path
     :type unix_path: str
 
-    :param timeout: Total time of timeout call
+    :param timeout: An optional total time of timeout call
     :type timeout: int
 
-    :param loop: Event loop for run
-    :type loop: :class:`asyncio.events.AbstractEventLoop`
+    :param loop: An optional *event loop* instance
+                 (uses :func:`asyncio.get_event_loop` if not specified).
+    :type loop: :ref:`EventLoop<asyncio-event-loop>`
 
     :return: :class:`AsyncIOIPCClient` instance.
     """
@@ -94,7 +113,27 @@ class AsyncIOIPCClient(RpcMixin):
                                    response['error']['code'])
 
 
-class AsyncIOHTTPClient(RpcMixin):
+class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
+    """Creates AsyncIOHTTPClient client to communicate via HTTP(s).
+
+    :param host: Host on ethereum node
+    :type host: str
+
+    :param port: Port on ethereum node
+    :type port: int
+
+    :param tls: Use SSL connection
+    :type tls: bool
+
+    :param timeout: Total time of timeout call
+    :type timeout: int
+
+    :param loop: An optional *event loop* instance
+                 (uses :func:`asyncio.get_event_loop` if not specified).
+    :type loop: :ref:`EventLoop<asyncio-event-loop>`
+
+    :return: :class:`AsyncIOHTTPClient` instance.
+    """
 
     def __init__(self, host='127.0.0.1', port=8545, tls=False,
                  timeout=60, *, loop=None):
@@ -150,6 +189,20 @@ class AsyncIOHTTPClient(RpcMixin):
 
 @asyncio.coroutine
 def create_ethereum_client(uri, timeout=60, *, loop=None):
+    """Create client to ethereum node based on schema.
+
+    :param uri: Host on ethereum node
+    :type uri: str
+
+    :param timeout: An optional total time of timeout call
+    :type timeout: int
+
+    :param loop: An optional *event loop* instance
+                 (uses :func:`asyncio.get_event_loop` if not specified).
+    :type loop: :ref:`EventLoop<asyncio-event-loop>`
+
+    :return: :class:`BaseAsyncIOClient` instance.
+    """
     presult = urlparse(uri)
     if presult.scheme in ('ipc', 'unix'):
         reader, writer = yield from asyncio.open_unix_connection(presult.path)

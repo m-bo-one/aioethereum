@@ -17,7 +17,7 @@ HTTP support                        Yes
 Unix domain socket (IPC) support    Yes
 SSL/TLS support                     Yes
 Tested CPython versions             `3.4, 3.5, 3.6`
-Tested for Geth node                `1.7.0`
+Tested Geth versions                `1.7.0`
 Implemented RPC apis                `db, eth, miner, net, personal, shh, txpool, web3`
 ================================  ==============================
 
