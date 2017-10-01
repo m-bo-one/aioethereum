@@ -1,3 +1,5 @@
+|pypi| |license| |docs|
+
 aioethereum
 ===========
 
@@ -97,3 +99,16 @@ TODO
 * Add tests for all management RPC apis
 * Add admin and debug apis
 * Add sphinx docs
+
+
+.. |pypi| image:: https://img.shields.io/pypi/v/aioethereum.svg?style=flat&label=latest%20version
+    :target: https://pypi.python.org/pypi/aioethereum
+    :alt: Latest version released on PyPi
+
+.. |license| image:: https://img.shields.io/pypi/l/aioethereum.svg?style=flat&label=license
+    :target: https://github.com/DeV1doR/aioethereum/blob/master/LICENSE.md
+    :alt: MIT License
+
+.. |docs| image:: https://readthedocs.org/projects/aioethereum/badge/?version=latest
+    :target: http://aioethereum.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation status

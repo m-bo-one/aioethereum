@@ -21,6 +21,24 @@ _reconnect_times = 3
 
 
 class AsyncIOIPCClient(RpcMixin):
+    """
+    :param reader: Instance of the stream reader
+    :type reader: :class:`asyncio.streams.StreamReader`
+
+    :param writer: Instance of the stream writer
+    :type writer: :class:`asyncio.streams.StreamWriter`
+
+    :param unix_path: Unix domain path
+    :type unix_path: str
+
+    :param timeout: Total time of timeout call
+    :type timeout: int
+
+    :param loop: Event loop for run
+    :type loop: :class:`asyncio.events.AbstractEventLoop`
+
+    :return: :class:`AsyncIOIPCClient` instance.
+    """
 
     def __init__(self, reader, writer, unix_path, timeout=60, *, loop=None):
         self._reader = reader
