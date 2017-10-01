@@ -16,7 +16,7 @@ Features
 --------
 
 ================================  ==============================
-ujson_ support                      Yes
+:term:`ujson` support               Yes
 High-level APIs                     Yes
 HTTP support                        Yes
 Unix domain socket (IPC) support    Yes
@@ -64,6 +64,7 @@ API Documentation
    :maxdepth: 4
 
    base
+   glossary
 
 
 Indices and tables

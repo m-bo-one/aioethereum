@@ -1,10 +1,16 @@
-from .client import AsyncIOHTTPClient, AsyncIOIPCClient, create_ethereum_client
+from .client import (
+    AsyncIOHTTPClient,
+    AsyncIOIPCClient,
+    BaseAsyncIOClient,
+    create_ethereum_client
+)
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 __all__ = [
     'AsyncIOHTTPClient',
     'AsyncIOIPCClient',
+    'BaseAsyncIOClient',
     'create_ethereum_client',
 ]

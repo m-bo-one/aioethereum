@@ -9,6 +9,7 @@ class DbMixin:
     @asyncio.coroutine
     def db_putString(self, db_name, key, value):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#db_putstring
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
@@ -18,6 +19,7 @@ class DbMixin:
     @asyncio.coroutine
     def db_getString(self, db_name, key):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#db_getstring
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
@@ -27,6 +29,7 @@ class DbMixin:
     @asyncio.coroutine
     def db_putHex(self, db_name, key, value):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#db_puthex
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
@@ -37,6 +40,7 @@ class DbMixin:
 
     def db_getHex(self, db_name, key):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#db_gethex
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)

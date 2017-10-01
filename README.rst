@@ -24,7 +24,7 @@ Implemented RPC apis                `db, eth, miner, net, personal, shh, txpool,
 Documentation
 -------------
 
-TODO
+http://aioethereum.readthedocs.io/
 
 Usage examples
 --------------

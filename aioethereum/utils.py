@@ -9,6 +9,12 @@ def hex_to_dec(x):
     return int(x, 16)
 
 
+def ether_to_wei(ether):
+    """Convert ether to wei
+    """
+    return int(ether * 10**18)
+
+
 def validate_block(block):
     if isinstance(block, str):
         if block not in BLOCK_TAGS:
