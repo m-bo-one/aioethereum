@@ -1,4 +1,4 @@
-sudo: false
+sudo: yes
 
 language: python
 
@@ -6,6 +6,14 @@ python:
 - "3.4"
 - "3.5"
 - "3.6"
+
+before_install:
+- sudo apt-get update -qq
+- mkdir -p /tmp
+- wget https://github.com/ethereum/go-ethereum/archive/v1.7.0.tar.gz
+- tar -xzf v1.7.0.tar.gz --directory /tmp
+- make -C /tmp/go-ethereum-1.7.0 geth
+- sudo ln -s /tmp/go-ethereum-1.7.0/build/bin/geth /usr/local/bin
 
 install:
 - pip install codecov
