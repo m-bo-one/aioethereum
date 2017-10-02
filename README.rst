@@ -1,4 +1,4 @@
-|pypi| |license| |docs|
+|pypi| |travis-ci| |codecov| |docs| |license|
 
 aioethereum
 ===========
@@ -16,8 +16,8 @@ High-level APIs                     Yes
 HTTP support                        Yes
 Unix domain socket (IPC) support    Yes
 SSL/TLS support                     Yes
-Tested CPython versions             `3.4, 3.5, 3.6`
-Tested Geth versions                `1.7.0`
+Tested CPython versions             `3.4, 3.5, 3.6 <travis_>`_
+Tested Geth versions                `1.7.0 <travis_>`_
 Implemented RPC apis                `db, eth, miner, net, personal, shh, txpool, web3`
 ================================  ==============================
 
@@ -91,6 +91,7 @@ The aioethereum is offered under MIT license.
 .. _asyncio: https://pypi.python.org/pypi/asyncio
 .. _aiohttp: https://pypi.python.org/pypi/aiohttp
 .. _ujson: https://pypi.python.org/pypi/ujson
+.. _travis: https://travis-ci.org/DeV1doR/aioethereum
 
 
 TODO
@@ -104,10 +105,18 @@ TODO
     :target: https://pypi.python.org/pypi/aioethereum
     :alt: Latest version released on PyPi
 
-.. |license| image:: https://img.shields.io/pypi/l/aioethereum.svg?style=flat&label=license
-    :target: https://github.com/DeV1doR/aioethereum/blob/master/LICENSE.md
-    :alt: MIT License
+.. |travis-ci| image:: https://travis-ci.org/DeV1doR/aioethereum.svg?branch=master
+    :target: https://travis-ci.org/DeV1doR/aioethereum
+    :alt: Travis CI status
 
 .. |docs| image:: https://readthedocs.org/projects/aioethereum/badge/?version=latest
     :target: http://aioethereum.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation status
+
+.. |codecov| image:: https://codecov.io/gh/DeV1doR/aioethereum/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/DeV1doR/aioethereum
+    :alt: Test coverage
+
+.. |license| image:: https://img.shields.io/pypi/l/aioethereum.svg?style=flat&label=license
+    :target: https://github.com/DeV1doR/aioethereum/blob/master/LICENSE.md
+    :alt: MIT License
