@@ -11,8 +11,7 @@ class NetMixin:
 
         :rtype: str
         """
-        result = yield from self._call('net_version')
-        return result
+        return (yield from self.rpc_call('net_version'))
 
     @asyncio.coroutine
     def net_listening(self):
@@ -20,8 +19,7 @@ class NetMixin:
 
         :rtype: bool
         """
-        result = yield from self._call('net_listening')
-        return result
+        return (yield from self.rpc_call('net_listening'))
 
     @asyncio.coroutine
     def net_peerCount(self):
@@ -29,5 +27,4 @@ class NetMixin:
 
         :rtype: int
         """
-        result = yield from self._call('net_peerCount')
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('net_peerCount')))

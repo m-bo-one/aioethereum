@@ -18,9 +18,8 @@ class PersonalMixin:
         :return: address
         :rtype: hex
         """
-        result = yield from self._call('personal_importRawKey',
-                                       [keydata, passphrase])
-        return result
+        return (yield from self.rpc_call('personal_importRawKey',
+                                         [keydata, passphrase]))
 
     @asyncio.coroutine
     def personal_listAccounts(self):
@@ -29,8 +28,7 @@ class PersonalMixin:
         :return: addresses
         :rtype: list
         """
-        result = yield from self._call('personal_listAccounts')
-        return result
+        return (yield from self.rpc_call('personal_listAccounts'))
 
     @asyncio.coroutine
     def personal_lockAccount(self, address):
@@ -41,8 +39,7 @@ class PersonalMixin:
 
         :rtype: bool
         """
-        result = yield from self._call('personal_lockAccount', [address])
-        return result
+        return (yield from self.rpc_call('personal_lockAccount', [address]))
 
     @asyncio.coroutine
     def personal_newAccount(self, passphrase=None):
@@ -52,7 +49,7 @@ class PersonalMixin:
         :type passphrase: str
 
         :return: address
-        :rtype: hex
+        :rtype: str
         """
         result = yield from self._call('personal_newAccount', [passphrase])
         return result
@@ -107,7 +104,7 @@ class PersonalMixin:
         :type passphrase: str
 
         :return: txhash
-        :rtype: hex
+        :rtype: str
         """
         obj = {}
         obj['from'] = from_
@@ -142,7 +139,7 @@ class PersonalMixin:
         :type password: str
 
         :return: signature
-        :rtype: hex
+        :rtype: str
         """
         result = yield from self._call('personal_sign',
                                        [message, account, password])
@@ -159,7 +156,7 @@ class PersonalMixin:
         :type password: str
 
         :return: address
-        :rtype: hex
+        :rtype: str
         """
         result = yield from self._call('personal_ecRecover',
                                        [message, signature])

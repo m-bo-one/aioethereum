@@ -51,7 +51,7 @@ class BaseAsyncIOClient(ABC):
     @asyncio.coroutine
     def _call(self, method, params=None, id_=None):
         warnings.warn('This method is deprecated and will be removed '
-                      'in v0.2.0', DeprecationWarning)
+                      'in v0.2.0', DeprecationWarning, stacklevel=2)
         return (yield from self.rpc_call(method, params, id_))
 
 
@@ -79,9 +79,9 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
 
     def __init__(self, host='127.0.0.1', port=8545, tls=False,
                  timeout=60, *, loop=None):
-        self.host = host
-        self.port = port
-        self.tls = tls
+        self._host = host
+        self._port = port
+        self._tls = tls
         self._timeout = timeout
         self._id = 1
         self._loop = loop or asyncio.get_event_loop()
@@ -96,9 +96,9 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
             'id': id_ or self._id,
         }
         scheme = 'http'
-        if self.tls:
+        if self._tls:
             scheme += 's'
-        url = '{}://{}:{}'.format(scheme, self.host, self.port)
+        url = '{0}://{1}:{2}'.format(scheme, self._host, self._port)
 
         try:
             with aiohttp.ClientSession(loop=self._loop) as session:

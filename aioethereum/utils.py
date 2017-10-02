@@ -2,7 +2,9 @@ from .constants import BLOCK_TAGS
 
 
 def add_0x(string):
-    return '0x{0}'.format(string)
+    if isinstance(string, bytes):
+        string = string.decode('utf-8')
+    return '0x' + str(string)
 
 
 def hex_to_dec(x):

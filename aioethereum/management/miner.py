@@ -12,8 +12,7 @@ class MinerMixin:
 
         :rtype: bool
         """
-        result = yield from self._call('miner_setExtra', [data])
-        return result
+        return (yield from self.rpc_call('miner_setExtra', [data]))
 
     @asyncio.coroutine
     def miner_setGasPrice(self, number):
@@ -24,8 +23,7 @@ class MinerMixin:
 
         :rtype: bool
         """
-        result = yield from self._call('miner_setGasPrice', [hex(number)])
-        return result
+        return (yield from self.rpc_call('miner_setGasPrice', [hex(number)]))
 
     @asyncio.coroutine
     def miner_start(self, number):
@@ -34,10 +32,9 @@ class MinerMixin:
         :param number: CPU mining process with the given number of threads
         :type number: int
 
-        :rtype: bool
+        :rtype: None
         """
-        result = yield from self._call('miner_start', [number])
-        return result
+        return (yield from self.rpc_call('miner_start', [number]))
 
     @asyncio.coroutine
     def miner_stop(self):
@@ -45,8 +42,7 @@ class MinerMixin:
 
         :rtype: bool
         """
-        result = yield from self._call('miner_stop')
-        return result
+        return (yield from self.rpc_call('miner_stop'))
 
     @asyncio.coroutine
     def miner_setEtherBase(self, address):
@@ -54,5 +50,4 @@ class MinerMixin:
 
         NOT AVAILABLE
         """
-        result = yield from self._call('miner_setEtherBase', [address])
-        return result
+        return (yield from self.rpc_call('miner_setEtherBase', [address]))
