@@ -223,7 +223,8 @@ def create_ethereum_client(uri, timeout=60, *, loop=None):
     """
     presult = urlparse(uri)
     if presult.scheme in ('ipc', 'unix'):
-        reader, writer = yield from asyncio.open_unix_connection(presult.path)
+        reader, writer = yield from asyncio.open_unix_connection(presult.path,
+                                                                 loop=loop)
         return AsyncIOIPCClient(reader, writer, uri, timeout, loop=loop)
     elif presult.scheme in ('http', 'https'):
         tls = False
