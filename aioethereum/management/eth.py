@@ -10,109 +10,173 @@ class EthMixin:
     @asyncio.coroutine
     def eth_protocolVersion(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_protocolversion
+
+        :rtype: int
         """
-        result = yield from self._call('eth_protocolVersion')
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_protocolVersion')))
 
     @asyncio.coroutine
     def eth_syncing(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_syncing
+
+        :return: sync status or false
+        :rtype: dict or bool
         """
-        result = yield from self._call('eth_syncing')
-        return result
+        return (yield from self.rpc_call('eth_syncing'))
 
     @asyncio.coroutine
     def eth_coinbase(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_coinbase
+
+        :return: address
+        :rtype: str
         """
-        result = yield from self._call('eth_coinbase')
-        return result
+        return (yield from self.rpc_call('eth_coinbase'))
 
     @asyncio.coroutine
     def eth_mining(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_mining
+
+        :rtype: bool
         """
-        result = yield from self._call('eth_mining')
-        return result
+        return (yield from self.rpc_call('eth_mining'))
 
     @asyncio.coroutine
     def eth_hashrate(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_hashrate
+
+        :return: hashrate
+        :rtype: int
         """
-        result = yield from self._call('eth_hashrate')
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_hashrate')))
 
     @asyncio.coroutine
     def eth_gasPrice(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gasprice
+
+        :return: wei
+        :rtype: int
         """
-        result = yield from self._call('eth_gasPrice')
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_gasPrice')))
 
     @asyncio.coroutine
     def eth_accounts(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_accounts
+
+        :return: accounts
+        :rtype: list
         """
-        result = yield from self._call('eth_accounts')
-        return result
+        return (yield from self.rpc_call('eth_accounts'))
 
     @asyncio.coroutine
     def eth_blockNumber(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_blocknumber
+
+        :return: bnumber
+        :rtype: int
         """
-        result = yield from self._call('eth_blockNumber')
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_blockNumber')))
 
     @asyncio.coroutine
     def eth_getBalance(self, address, block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getbalance
+
+        :param address: Account address
+        :type address: str
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :return: wei
+        :rtype: int
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getBalance', [address, block])
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_getBalance',
+                                                    [address, block])))
 
     @asyncio.coroutine
     def eth_getStorageAt(self, address, position=0, block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getstorageat
+
+        :param address: Storage address
+        :type address: str
+
+        :param position: Position in storage (optional)
+        :type position: int
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :rtype: int
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getStorageAt',
-                                       [address, hex(position), block])
-        return result
+        return hex_to_dec((yield from self.rpc_call('eth_getStorageAt',
+                                                    [address,
+                                                     hex(position),
+                                                     block])))
 
     @asyncio.coroutine
     def eth_getTransactionCount(self, address, block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactioncount
+
+        :param address: Account address
+        :type address: str
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :return: count
+        :rtype: int
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getTransactionCount',
-                                       [address, block])
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_getTransactionCount',
+                                                    [address, block])))
 
     @asyncio.coroutine
     def eth_getBlockTransactionCountByHash(self, bhash):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblocktransactioncountbyhash
+
+        :param bhash: Block hash
+        :type bhash: str
+
+        :return: count
+        :rtype: int or None
         """
-        result = yield from self._call('eth_getBlockTransactionCountByHash',
-                                       [bhash])
-        return hex_to_dec(result)
+        response = yield from self.rpc_call('eth_getBlockTransactionCountByHash',
+                                            [bhash])
+        if response:
+            return hex_to_dec(response)
+        return response
 
     @asyncio.coroutine
     def eth_getBlockTransactionCountByNumber(self, block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblocktransactioncountbynumber
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :return: count
+        :rtype: int
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getBlockTransactionCountByNumber',
-                                       [block])
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_getBlockTransactionCountByNumber',
+                                                    [block])))
 
     @asyncio.coroutine
     def eth_getUncleCountByBlockHash(self, bhash):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getunclecountbyblockhash
+
+        :param bhash: Block hash
+        :type bhash: str
+
+        :return: count
+        :rtype: int or None
         """
-        result = yield from self._call('eth_getUncleCountByBlockHash',
-                                       [bhash])
-        return hex_to_dec(result)
+        response = yield from self._call('eth_getUncleCountByBlockHash',
+                                         [bhash])
+        if response:
+            return hex_to_dec(response)
+        return response
 
     @asyncio.coroutine
     def eth_getUncleCountByBlockNumber(self, block=BLOCK_TAG_LATEST):

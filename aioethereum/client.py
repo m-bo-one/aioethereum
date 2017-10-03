@@ -180,12 +180,13 @@ class AsyncIOIPCClient(BaseAsyncIOClient, RpcMixin):
                     try:
                         new_client = yield from create_ethereum_client(
                             self._unix_path, self._timeout)
-                        break
                     except Exception:
                         tried += 1
                         if tried == _reconnect_times:
                             raise ConnectionError('Didn\'t receive any data, '
                                                   'connection refused.')
+                    else:
+                        break
                 self._id = new_client._id
                 self._reader = new_client._reader
                 self._writer = new_client._writer
