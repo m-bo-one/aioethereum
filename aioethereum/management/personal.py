@@ -95,7 +95,7 @@ class PersonalMixin:
         :type value: int
 
         :param data: Additional data for transaction (optional)
-        :type data: str
+        :type data: hex
 
         :param nonce: Unique nonce for transaction (optional)
         :type nonce: int

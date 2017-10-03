@@ -1,4 +1,4 @@
-|pypi| |travis-ci| |codecov| |docs| |license|
+|pypi| |travis-ci| |codecov|
 
 aioethereum
 ===========
@@ -92,13 +92,6 @@ The aioethereum is offered under MIT license.
 .. _aiohttp: https://pypi.python.org/pypi/aiohttp
 .. _ujson: https://pypi.python.org/pypi/ujson
 .. _travis: https://travis-ci.org/DeV1doR/aioethereum
-
-
-TODO
-----
-
-* Add tests for all management RPC apis
-* Add admin and debug apis
 
 
 .. |pypi| image:: https://img.shields.io/pypi/v/aioethereum.svg?style=flat&label=latest%20version

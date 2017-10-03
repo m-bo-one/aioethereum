@@ -49,7 +49,16 @@ def test_call_personal_sendTransaction(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
     response = yield from client.personal_sendTransaction(
-        server.coinbase, '0x08fcff507b9eda1de5a7b10f593606a998ab75ad', value=1)
+        from_=server.coinbase,
+        to='0x08fcff507b9eda1de5a7b10f593606a998ab75ad',
+        gas=31000,
+        gas_price=1 * 10**9,
+        value=0.001,
+        data='0xc0de',
+        nonce=1)
+    assert isinstance(response, str)
+
+    response = yield from client.personal_sendTransaction(server.coinbase)
     assert isinstance(response, str)
 
 

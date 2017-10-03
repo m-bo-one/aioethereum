@@ -86,6 +86,13 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
         self._id = 1
         self._loop = loop or asyncio.get_event_loop()
 
+    @property
+    def _endpoint(self):
+        scheme = 'http'
+        if self._tls:
+            scheme += 's'
+        return '{0}://{1}:{2}'.format(scheme, self._host, self._port)
+
     @asyncio.coroutine
     def rpc_call(self, method, params=None, id_=None):
         params = params or []
@@ -95,17 +102,12 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
             'params': params,
             'id': id_ or self._id,
         }
-        scheme = 'http'
-        if self._tls:
-            scheme += 's'
-        url = '{0}://{1}:{2}'.format(scheme, self._host, self._port)
-
         try:
             with aiohttp.ClientSession(loop=self._loop) as session:
                 with async_timeout.timeout(self._timeout,
                                            loop=self._loop):
                     r = yield from session.post(
-                        url=url,
+                        url=self._endpoint,
                         data=json.dumps(data),
                         headers={'Content-Type': 'application/json'}
                     )
@@ -176,13 +178,12 @@ class AsyncIOIPCClient(BaseAsyncIOClient, RpcMixin):
                 tried = 0
                 while True:
                     try:
-                        new_client = create_ethereum_client(self._unix_path,
-                                                            self._timeout)
+                        new_client = yield from create_ethereum_client(
+                            self._unix_path, self._timeout)
+                        break
                     except Exception:
                         tried += 1
-                        if tried >= _reconnect_times:
-                            self._log.error('_receive: no data, '
-                                            'connection refused.')
+                        if tried == _reconnect_times:
                             raise ConnectionError('Didn\'t receive any data, '
                                                   'connection refused.')
                 self._id = new_client._id
