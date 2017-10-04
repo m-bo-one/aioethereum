@@ -182,7 +182,6 @@ def test_call_eth_sendRawTransaction(create_ethereum_client, loop, server):
 def test_call_eth_call(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    yield from client.personal_unlockAccount(server.coinbase)
     response = yield from client.eth_call(
         from_=server.coinbase,
         to='0x08fcff507b9eda1de5a7b10f593606a998ab75ad',
@@ -197,7 +196,6 @@ def test_call_eth_call(create_ethereum_client, loop, server):
 def test_call_eth_estimateGas(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    yield from client.personal_unlockAccount(server.coinbase)
     response = yield from client.eth_estimateGas(
         from_=server.coinbase,
         to='0x08fcff507b9eda1de5a7b10f593606a998ab75ad',
@@ -212,7 +210,6 @@ def test_call_eth_estimateGas(create_ethereum_client, loop, server):
 def test_call_eth_getBlockByHash(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    yield from client.personal_unlockAccount(server.coinbase)
     response = yield from client.eth_getBlockByHash(
         '0x850c6fb78d9627e9701f225e02357ae69fb2cd147f2f12a6663251f35ff6ff35')
     assert response is None
@@ -222,7 +219,6 @@ def test_call_eth_getBlockByHash(create_ethereum_client, loop, server):
 def test_call_eth_getBlockByNumber(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    yield from client.personal_unlockAccount(server.coinbase)
     response = yield from client.eth_getBlockByNumber()
     assert isinstance(response, Mapping)
 
@@ -231,7 +227,6 @@ def test_call_eth_getBlockByNumber(create_ethereum_client, loop, server):
 def test_call_eth_getTransactionByHash(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    yield from client.personal_unlockAccount(server.coinbase)
     response = yield from client.eth_getTransactionByHash(
         '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347')
     assert response is None
@@ -242,7 +237,182 @@ def test_call_eth_getTransactionByBlockHashAndIndex(create_ethereum_client,
                                                     loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    yield from client.personal_unlockAccount(server.coinbase)
     response = yield from client.eth_getTransactionByBlockHashAndIndex(
         '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347')
     assert response is None
+
+
+@pytest.mark.run_loop
+def test_call_eth_getTransactionByBlockNumberAndIndex(create_ethereum_client,
+                                                      loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_getTransactionByBlockNumberAndIndex()
+    assert response is None
+
+
+@pytest.mark.run_loop
+def test_call_eth_getTransactionReceipt(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_getTransactionReceipt(
+        '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347')
+    assert response is None
+
+
+@pytest.mark.run_loop
+def test_call_eth_getUncleByBlockHashAndIndex(create_ethereum_client, loop,
+                                              server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_getUncleByBlockHashAndIndex(
+        '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347')
+    assert response is None
+
+
+@pytest.mark.run_loop
+def test_call_eth_getUncleByBlockNumberAndIndex(create_ethereum_client, loop,
+                                                server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_getUncleByBlockNumberAndIndex()
+    assert response is None
+
+
+@pytest.mark.run_loop
+def test_call_eth_getCompilers(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    with pytest.raises(BadResponseError) as excinfo:
+        yield from client.eth_getCompilers()
+
+    assert excinfo.value.code == -32601
+    assert 'does not exist/is not available' in excinfo.value.msg
+
+
+@pytest.mark.run_loop
+def test_call_eth_compileSolidity(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    with pytest.raises(BadResponseError) as excinfo:
+        yield from client.eth_compileSolidity('0101')
+
+    assert excinfo.value.code == -32601
+    assert 'does not exist/is not available' in excinfo.value.msg
+
+
+@pytest.mark.run_loop
+def test_call_eth_compileLLL(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    with pytest.raises(BadResponseError) as excinfo:
+        yield from client.eth_compileLLL('0101')
+
+    assert excinfo.value.code == -32601
+    assert 'does not exist/is not available' in excinfo.value.msg
+
+
+@pytest.mark.run_loop
+def test_call_eth_compileSerpent(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    with pytest.raises(BadResponseError) as excinfo:
+        yield from client.eth_compileSerpent('0101')
+
+    assert excinfo.value.code == -32601
+    assert 'does not exist/is not available' in excinfo.value.msg
+
+
+@pytest.mark.run_loop
+def test_call_eth_newFilter(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_newFilter()
+    assert isinstance(response, str)
+
+
+@pytest.mark.run_loop
+def test_call_eth_newBlockFilter(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_newBlockFilter()
+    assert isinstance(response, str)
+
+
+@pytest.mark.run_loop
+def test_call_eth_newPendingTransactionFilter(create_ethereum_client, loop,
+                                              server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_newPendingTransactionFilter()
+    assert isinstance(response, str)
+
+
+@pytest.mark.run_loop
+def test_call_eth_uninstallFilter(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_uninstallFilter(
+        '0x8e124ea68678b238b9b768dbf4c7ee2a')
+    assert isinstance(response, bool)
+
+
+@pytest.mark.run_loop
+def test_call_eth_getFilterChanges(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    with pytest.raises(BadResponseError) as excinfo:
+        yield from client.eth_getFilterChanges(
+            '0x8e124ea68678b238b9b768dbf4c7ee2a')
+
+    assert excinfo.value.code == -32000
+    assert 'filter not found' in excinfo.value.msg
+
+
+@pytest.mark.run_loop
+def test_call_eth_getFilterLogs(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    with pytest.raises(BadResponseError) as excinfo:
+        yield from client.eth_getFilterLogs(
+            '0x8e124ea68678b238b9b768dbf4c7ee2a')
+
+    assert excinfo.value.code == -32000
+    assert 'filter not found' in excinfo.value.msg
+
+
+@pytest.mark.run_loop
+def test_call_eth_getLogs(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_getLogs()
+    assert isinstance(response, list)
+
+
+@pytest.mark.run_loop
+def test_call_eth_getWork(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_getWork()
+    assert isinstance(response, list)
+
+
+@pytest.mark.run_loop
+def test_call_eth_submitWork(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_submitWork(
+        "0x0000000000000001",
+        "0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c",
+        "0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c")
+    assert isinstance(response, bool)
+
+
+@pytest.mark.run_loop
+def test_call_eth_submitHashrate(create_ethereum_client, loop, server):
+    client = yield from create_ethereum_client(server.http_address,
+                                               loop=loop)
+    response = yield from client.eth_submitHashrate(
+        100,
+        "0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c")
+    assert isinstance(response, bool)

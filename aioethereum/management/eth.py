@@ -430,7 +430,7 @@ class EthMixin:
         :type bhash: str
 
         :param index: Index position (optional)
-        :type index: str
+        :type index: int
         """
         result = yield from self.rpc_call('eth_getTransactionByBlockHashAndIndex',
                                           [bhash, hex(index)])
@@ -441,26 +441,52 @@ class EthMixin:
     def eth_getTransactionByBlockNumberAndIndex(self, block=BLOCK_TAG_LATEST,
                                                 index=0):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyblocknumberandindex
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :param index: Index position (optional)
+        :type index: int
+
+        :return: transaction
+        :rtype: dict or None
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getTransactionByBlockNumberAndIndex',
-                                       [block, hex(index)])
+        result = yield from self.rpc_call('eth_getTransactionByBlockNumberAndIndex',
+                                          [block, hex(index)])
+        # TODO: Update result response
         return result
 
     @asyncio.coroutine
     def eth_getTransactionReceipt(self, txhash):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionreceipt
+
+        :param txhash: Transaction hash
+        :type txhash: str
+
+        :return: transaction
+        :rtype: dict or None
         """
-        result = yield from self._call('eth_getTransactionReceipt', [txhash])
+        result = yield from self.rpc_call('eth_getTransactionReceipt',
+                                          [txhash])
         # TODO: Update result response
         return result
 
     @asyncio.coroutine
     def eth_getUncleByBlockHashAndIndex(self, bhash, index=0):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getunclebyblockhashandindex
+
+        :param bhash: Block hash
+        :type bhash: str
+
+        :param index: Index position (optional)
+        :type index: int
+
+        :return: block
+        :rtype: dict or None
         """
-        result = yield from self._call('eth_getUncleByBlockHashAndIndex',
-                                       [bhash, hex(index)])
+        result = yield from self.rpc_call('eth_getUncleByBlockHashAndIndex',
+                                          [bhash, hex(index)])
         # TODO: Update result response
         return result
 
@@ -468,136 +494,209 @@ class EthMixin:
     def eth_getUncleByBlockNumberAndIndex(self, block=BLOCK_TAG_LATEST,
                                           index=0):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getunclebyblocknumberandindex
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :param index: Index position (optional)
+        :type index: int
+
+        :return: block
+        :rtype: dict or None
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getUncleByBlockNumberAndIndex',
-                                       [block, hex(index)])
+        result = yield from self.rpc_call('eth_getUncleByBlockNumberAndIndex',
+                                          [block, hex(index)])
         # TODO: Update result response
         return result
 
     @asyncio.coroutine
     def eth_getCompilers(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getcompilers
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
-        result = yield from self._call('eth_getCompilers')
-        return result
+        return (yield from self.rpc_call('eth_getCompilers'))
 
     @asyncio.coroutine
     def eth_compileSolidity(self, code):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compilesolidity
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
-        result = yield from self._call('eth_compileSolidity', [code])
-        return result
+        return (yield from self.rpc_call('eth_compileSolidity', [code]))
 
     @asyncio.coroutine
     def eth_compileLLL(self, code):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compilelll
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
-        result = yield from self._call('eth_compileLLL', [code])
-        return result
+        return (yield from self.rpc_call('eth_compileLLL', [code]))
 
     @asyncio.coroutine
     def eth_compileSerpent(self, code):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compileserpent
+
         DEPRECATED
         """
         warnings.warn('deprecated', DeprecationWarning)
-        result = yield from self._call('eth_compileSerpent', [code])
-        return result
+        return (yield from self.rpc_call('eth_compileSerpent', [code]))
 
     @asyncio.coroutine
     def eth_newFilter(self, from_block=BLOCK_TAG_LATEST,
                       to_block=BLOCK_TAG_LATEST, address=None, topics=None):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter
+
+        :param from_block: Block tag or number (optional)
+        :type from_block: int or BLOCK_TAGS
+
+        :param to_block: Block tag or number (optional)
+        :type to_block: int or BLOCK_TAGS
+
+        :param address: Contract address (optional)
+        :type address: str
+
+        :param topics: Topics (optional)
+        :type topics: list
+
+        :return: filter_id
+        :rtype: str
         """
         obj = {
             'fromBlock': validate_block(from_block),
             'toBlock': validate_block(to_block),
+            'address': address,
+            'topics': topics
         }
-        if address:
-            obj['address'] = address
-        if topics:
-            obj['topics'] = topics
-
-        result = yield from self._call('eth_newFilter', [obj])
-        return result
+        return (yield from self.rpc_call('eth_newFilter', [obj]))
 
     @asyncio.coroutine
     def eth_newBlockFilter(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newblockfilter
+
+        :return: filter_id
+        :rtype: str
         """
-        result = yield from self._call('eth_newBlockFilter')
-        return result
+        return (yield from self.rpc_call('eth_newBlockFilter'))
 
     @asyncio.coroutine
     def eth_newPendingTransactionFilter(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newpendingtransactionfilter
+
+        :return: filter_id
+        :rtype: str
         """
-        result = yield from self._call('eth_newPendingTransactionFilter')
-        return result
+        return (yield from self.rpc_call('eth_newPendingTransactionFilter'))
 
     @asyncio.coroutine
     def eth_uninstallFilter(self, filter_id):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_uninstallfilter
+
+        :param filter_id: Id of created filter
+        :type filter_id: str
+
+        :return: success
+        :rtype: bool
         """
-        result = yield from self._call('eth_uninstallFilter', [filter_id])
-        return result
+        return (yield from self.rpc_call('eth_uninstallFilter', [filter_id]))
 
     @asyncio.coroutine
     def eth_getFilterChanges(self, filter_id):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getfilterchanges
+
+        :param filter_id: Id of created filter
+        :type filter_id: str
+
+        :return: logs
+        :rtype: list
         """
-        result = yield from self._call('eth_getFilterChanges', [filter_id])
-        return result
+        return (yield from self.rpc_call('eth_getFilterChanges', [filter_id]))
 
     @asyncio.coroutine
     def eth_getFilterLogs(self, filter_id):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getfilterlogs
+
+        :param filter_id: Id of created filter
+        :type filter_id: str
+
+        :return: logs
+        :rtype: list
         """
-        result = yield from self._call('eth_getFilterLogs', [filter_id])
-        return result
+        return (yield from self.rpc_call('eth_getFilterLogs', [filter_id]))
 
     @asyncio.coroutine
     def eth_getLogs(self, from_block=BLOCK_TAG_LATEST,
                     to_block=BLOCK_TAG_LATEST, address=None, topics=None):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getlogs
+
+        :param from_block: Block tag or number (optional)
+        :type from_block: int or BLOCK_TAGS
+
+        :param to_block: Block tag or number (optional)
+        :type to_block: int or BLOCK_TAGS
+
+        :param address: Contract address (optional)
+        :type address: str
+
+        :param topics: Topics (optional)
+        :type topics: list
+
+        :return: logs
+        :rtype: list
         """
         obj = {
             'fromBlock': validate_block(from_block),
             'toBlock': validate_block(to_block),
+            'address': address,
+            'topics': topics
         }
-        if address:
-            obj['address'] = address
-        if topics:
-            obj['topics'] = topics
-        result = yield from self._call('eth_getLogs', [obj])
+        result = yield from self.rpc_call('eth_getLogs', [obj])
         return result
 
     @asyncio.coroutine
     def eth_getWork(self):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getwork
+
+        :return: work
+        :rtype: list
         """
-        result = yield from self._call('eth_getWork')
-        return result
+        return (yield from self.rpc_call('eth_getWork'))
 
     @asyncio.coroutine
     def eth_submitWork(self, nonce, header, mix_digest):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_submitwork
+
+        :param nonce: Nonce of work
+        :type nonce: int
+
+        :param header: Pow-hash header
+        :type header: str
+
+        :param mix_digest: Mix digest
+        :type mix_digest: str
+
+        :return: success
+        :rtype: bool
         """
-        result = yield from self._call('eth_submitWork',
-                                       [nonce, header, mix_digest])
-        return result
+        return (yield from self.rpc_call('eth_submitWork',
+                                         [nonce, header, mix_digest]))
 
     @asyncio.coroutine
     def eth_submitHashrate(self, hashrate, id_):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_submithashrate
+
+        :param hashrate: Hash rate
+        :type hashrate: str
+
+        :param id_: Random hex
+        :type id_: str
+
+        :return: success
+        :rtype: bool
         """
-        result = yield from self._call('eth_submitHashrate',
-                                       [hex(hashrate), id_])
-        return result
+        return (yield from self.rpc_call('eth_submitHashrate',
+                                         [hex(hashrate), id_]))
