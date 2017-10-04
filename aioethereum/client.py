@@ -48,12 +48,6 @@ class BaseAsyncIOClient(ABC):
         :return: `Response from RPC`
         """
 
-    @asyncio.coroutine
-    def _call(self, method, params=None, id_=None):
-        warnings.warn('This method is deprecated and will be removed '
-                      'in v0.2.0', DeprecationWarning, stacklevel=2)
-        return (yield from self.rpc_call(method, params, id_))
-
 
 class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
     """Creates AsyncIOHTTPClient client to communicate via HTTP(s).
@@ -191,7 +185,7 @@ class AsyncIOIPCClient(BaseAsyncIOClient, RpcMixin):
                 self._reader = new_client._reader
                 self._writer = new_client._writer
                 self._lock = new_client._lock
-                return self._call(method, params, id_)
+                return (yield from self.rpc_call(method, params, id_))
 
         try:
             response = json.loads(b.decode('utf-8'))

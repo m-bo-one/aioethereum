@@ -51,8 +51,7 @@ class PersonalMixin:
         :return: address
         :rtype: str
         """
-        result = yield from self._call('personal_newAccount', [passphrase])
-        return result
+        return (yield from self.rpc_call('personal_newAccount', [passphrase]))
 
     @asyncio.coroutine
     def personal_unlockAccount(self, address, passphrase=None, duration=None):
@@ -69,9 +68,8 @@ class PersonalMixin:
 
         :rtype: bool
         """
-        result = yield from self._call('personal_unlockAccount',
-                                       [address, passphrase, duration])
-        return result
+        return (yield from self.rpc_call('personal_unlockAccount',
+                                         [address, passphrase, duration]))
 
     @asyncio.coroutine
     def personal_sendTransaction(self, from_, to=None, gas=None,
@@ -121,9 +119,8 @@ class PersonalMixin:
         if nonce is not None:
             obj['nonce'] = hex(nonce)
 
-        result = yield from self._call('personal_sendTransaction',
-                                       [obj, passphrase])
-        return result
+        return (yield from self.rpc_call('personal_sendTransaction',
+                                         [obj, passphrase]))
 
     @asyncio.coroutine
     def personal_sign(self, message, account, password=None):
@@ -141,9 +138,8 @@ class PersonalMixin:
         :return: signature
         :rtype: str
         """
-        result = yield from self._call('personal_sign',
-                                       [message, account, password])
-        return result
+        return (yield from self.rpc_call('personal_sign',
+                                         [message, account, password]))
 
     @asyncio.coroutine
     def personal_ecRecover(self, message, signature):
@@ -158,6 +154,5 @@ class PersonalMixin:
         :return: address
         :rtype: str
         """
-        result = yield from self._call('personal_ecRecover',
-                                       [message, signature])
-        return result
+        return (yield from self.rpc_call('personal_ecRecover',
+                                         [message, signature]))

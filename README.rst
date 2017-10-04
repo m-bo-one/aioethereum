@@ -1,4 +1,4 @@
-|pypi| |travis-ci| |codecov|
+|pypi| |travis-ci| |codecov| |docs|
 
 aioethereum
 ===========
@@ -94,8 +94,8 @@ The aioethereum is offered under MIT license.
 .. _travis: https://travis-ci.org/DeV1doR/aioethereum
 
 
-.. |pypi| image:: https://img.shields.io/pypi/v/aioethereum.svg?style=flat&label=latest%20version
-    :target: https://pypi.python.org/pypi/aioethereum
+.. |pypi| image:: https://badge.fury.io/py/aioethereum.svg
+    :target: https://badge.fury.io/py/aioethereum
     :alt: Latest version released on PyPi
 
 .. |travis-ci| image:: https://travis-ci.org/DeV1doR/aioethereum.svg?branch=master
@@ -103,7 +103,7 @@ The aioethereum is offered under MIT license.
     :alt: Travis CI status
 
 .. |docs| image:: https://readthedocs.org/projects/aioethereum/badge/?version=latest
-    :target: http://aioethereum.readthedocs.io/en/latest/?badge=latest
+    :target: https://aioethereum.readthedocs.io/
     :alt: Documentation status
 
 .. |codecov| image:: https://codecov.io/gh/DeV1doR/aioethereum/branch/master/graph/badge.svg

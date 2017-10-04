@@ -7,15 +7,17 @@ Changes
 **NEW**:
 
 * Add more docstrings to the code;
+
 * Add tests for all rpc methods;
+
 * Add admin and debug;
 
 
 **FIX**:
 
 * Errors in eth module call;
-* Unixsocket invalid loop for Python 3.4;
 
+* Unixsocket invalid loop for Python 3.4;
 
 
 0.1.1 (2017-10-01)
