@@ -23,8 +23,7 @@ def test_call_personal_listAccounts(create_ethereum_client, loop, server):
 def test_call_personal_lockAccount(create_ethereum_client, loop, server):
     client = yield from create_ethereum_client(server.http_address,
                                                loop=loop)
-    response = yield from client.personal_lockAccount(
-        '0x08fcff507b9eda1de5a7b10f593606a998ab75ad')
+    response = yield from client.personal_lockAccount(server.coinbase)
     assert response is True
 
 

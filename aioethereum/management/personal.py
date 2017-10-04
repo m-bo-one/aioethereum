@@ -55,13 +55,13 @@ class PersonalMixin:
         return result
 
     @asyncio.coroutine
-    def personal_unlockAccount(self, address, passphrase, duration=None):
+    def personal_unlockAccount(self, address, passphrase=None, duration=None):
         """https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal_unlockaccount
 
         :param address: Account address
         :type address: str
 
-        :param passphrase: Passphrase of account
+        :param passphrase: Passphrase of account (optional)
         :type passphrase: str
 
         :param duration: Duration to be unlocked (optional)

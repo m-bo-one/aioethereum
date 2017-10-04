@@ -1,7 +1,7 @@
 import warnings
 import asyncio
 
-from ..utils import hex_to_dec, validate_block
+from ..utils import hex_to_dec, validate_block, ether_to_wei
 from ..constants import BLOCK_TAG_LATEST
 
 
@@ -172,8 +172,8 @@ class EthMixin:
         :return: count
         :rtype: int or None
         """
-        response = yield from self._call('eth_getUncleCountByBlockHash',
-                                         [bhash])
+        response = yield from self.rpc_call('eth_getUncleCountByBlockHash',
+                                            [bhash])
         if response:
             return hex_to_dec(response)
         return response
@@ -181,32 +181,80 @@ class EthMixin:
     @asyncio.coroutine
     def eth_getUncleCountByBlockNumber(self, block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getunclecountbyblocknumber
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :return: count
+        :rtype: int
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getUncleCountByBlockNumber',
-                                       [block])
-        return hex_to_dec(result)
+        response = yield from self.rpc_call('eth_getUncleCountByBlockNumber',
+                                            [block])
+        if response:
+            return hex_to_dec(response)
+        return response
 
     @asyncio.coroutine
     def eth_getCode(self, address, block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getcode
+
+        :param address: Address of contract
+        :type address: str
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :return: code
+        :rtype: str
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getCode', [address, block])
-        return result
+        return (yield from self.rpc_call('eth_getCode', [address, block]))
 
     @asyncio.coroutine
     def eth_sign(self, address, data):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sign
+
+        :param address: Account address
+        :type address: str
+
+        :param data: Message to sign
+        :type data: str
+
+        :return: signature
+        :rtype: str
         """
-        result = yield from self._call('eth_sign', [address, hex(data)])
-        return result
+        return (yield from self.rpc_call('eth_sign', [address, data]))
 
     @asyncio.coroutine
     def eth_sendTransaction(self, from_, to=None, gas=None,
                             gas_price=None, value=None, data=None,
                             nonce=None):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sendtransaction
+
+        :param from_: From account address
+        :type from_: str
+
+        :param to: To account address (optional)
+        :type to: str
+
+        :param gas: Gas amount for current transaction (optional)
+        :type gas: int
+
+        :param gas_price: Gas price for current transaction (optional)
+        :type gas_price: int
+
+        :param value: Amount of ether to send (optional)
+        :type value: int
+
+        :param data: Additional data for transaction (optional)
+        :type data: hex
+
+        :param nonce: Unique nonce for transaction (optional)
+        :type nonce: int
+
+        :return: txhash
+        :rtype: str
         """
         obj = {}
         obj['from'] = from_
@@ -217,27 +265,54 @@ class EthMixin:
         if gas_price is not None:
             obj['gasPrice'] = hex(gas_price)
         if value is not None:
-            obj['value'] = hex(value)
+            obj['value'] = hex(ether_to_wei(value))
         if data is not None:
             obj['data'] = data
         if nonce is not None:
             obj['nonce'] = hex(nonce)
 
-        result = yield from self._call('eth_sendTransaction', [obj])
-        return result
+        return (yield from self.rpc_call('eth_sendTransaction', [obj]))
 
     @asyncio.coroutine
     def eth_sendRawTransaction(self, data):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sendrawtransaction
+
+        :param data: Signed transaction data
+        :type data: str
+
+        :return: txhash
+        :rtype: str
         """
-        result = yield from self._call('eth_sendRawTransaction', [data])
-        return result
+        return (yield from self.rpc_call('eth_sendRawTransaction', [data]))
 
     @asyncio.coroutine
     def eth_call(self, from_, to=None, gas=None,
                  gas_price=None, value=None, data=None,
                  block=BLOCK_TAG_LATEST):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_call
+
+        :param from_: From account address
+        :type from_: str
+
+        :param to: To account address (optional)
+        :type to: str
+
+        :param gas: Gas amount for current transaction (optional)
+        :type gas: int
+
+        :param gas_price: Gas price for current transaction (optional)
+        :type gas_price: int
+
+        :param value: Amount of ether to send (optional)
+        :type value: int
+
+        :param data: Additional data for transaction (optional)
+        :type data: hex
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :rtype: str
         """
         block = validate_block(block)
         obj = {}
@@ -249,17 +324,37 @@ class EthMixin:
         if gas_price is not None:
             obj['gasPrice'] = hex(gas_price)
         if value is not None:
-            obj['value'] = hex(value)
+            obj['value'] = hex(ether_to_wei(value))
         if data is not None:
             obj['data'] = data
 
-        result = yield from self._call('eth_call', [obj, block])
-        return result
+        return (yield from self.rpc_call('eth_call', [obj, block]))
 
     @asyncio.coroutine
     def eth_estimateGas(self, from_, to=None, gas=None,
                         gas_price=None, value=None, data=None):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_estimategas
+
+        :param from_: From account address
+        :type from_: str
+
+        :param to: To account address (optional)
+        :type to: str
+
+        :param gas: Gas amount for current transaction (optional)
+        :type gas: int
+
+        :param gas_price: Gas price for current transaction (optional)
+        :type gas_price: int
+
+        :param value: Amount of ether to send (optional)
+        :type value: int
+
+        :param data: Additional data for transaction (optional)
+        :type data: hex
+
+        :return: gas amount
+        :rtype: int
         """
         obj = {}
         obj['from'] = from_
@@ -270,46 +365,75 @@ class EthMixin:
         if gas_price is not None:
             obj['gasPrice'] = hex(gas_price)
         if value is not None:
-            obj['value'] = hex(value)
+            obj['value'] = hex(ether_to_wei(value))
         if data is not None:
             obj['data'] = data
 
-        result = yield from self._call('eth_estimateGas', [obj])
-        return hex_to_dec(result)
+        return hex_to_dec((yield from self.rpc_call('eth_estimateGas', [obj])))
 
     @asyncio.coroutine
     def eth_getBlockByHash(self, bhash, tx_objects=True):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbyhash
+
+        :param bhash: Block hash
+        :type bhash: str
+
+        :param tx_objects: Return txs full object (optional)
+        :type tx_objects: bool
+
+        :return: block
+        :rtype: dict or None
         """
-        result = yield from self._call('eth_getBlockByHash',
-                                       [bhash, tx_objects])
+        result = yield from self.rpc_call('eth_getBlockByHash',
+                                          [bhash, tx_objects])
         # TODO: Update result response
         return result
 
     @asyncio.coroutine
     def eth_getBlockByNumber(self, block=BLOCK_TAG_LATEST, tx_objects=True):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbynumber
+
+        :param block: Block tag or number (optional)
+        :type block: int or BLOCK_TAGS
+
+        :param tx_objects: Return txs full object (optional)
+        :type tx_objects: bool
+
+        :return: block
+        :rtype: dict or None
         """
         block = validate_block(block)
-        result = yield from self._call('eth_getBlockByNumber',
-                                       [block, tx_objects])
+        result = yield from self.rpc_call('eth_getBlockByNumber',
+                                          [block, tx_objects])
         # TODO: Update result response
         return result
 
     @asyncio.coroutine
     def eth_getTransactionByHash(self, txhash):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyhash
+
+        :param txhash: Transaction hash
+        :type txhash: str
+
+        :return: transaction
+        :rtype: dict or None
         """
-        result = yield from self._call('eth_getTransactionByHash', [txhash])
+        result = yield from self.rpc_call('eth_getTransactionByHash', [txhash])
         # TODO: Update result response
         return result
 
     @asyncio.coroutine
     def eth_getTransactionByBlockHashAndIndex(self, bhash, index=0):
         """https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyblockhashandindex
+
+        :param bhash: Block hash
+        :type bhash: str
+
+        :param index: Index position (optional)
+        :type index: str
         """
-        result = yield from self._call('eth_getTransactionByBlockHashAndIndex',
-                                       [bhash, hex(index)])
+        result = yield from self.rpc_call('eth_getTransactionByBlockHashAndIndex',
+                                          [bhash, hex(index)])
         # TODO: Update result response
         return result
 
