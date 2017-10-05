@@ -48,6 +48,12 @@ class BaseAsyncIOClient(ABC):
         :return: `Response from RPC`
         """
 
+    @asyncio.coroutine
+    def _call(self, method, params=None, id_=None):
+        warnings.warn('This method is deprecated and will be removed '
+                      'in v0.3.0', DeprecationWarning)
+        return (yield from self.rpc_call(method, params, id_))
+
 
 class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
     """Creates AsyncIOHTTPClient client to communicate via HTTP(s).

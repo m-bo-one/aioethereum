@@ -58,7 +58,7 @@ setup(
     name='aioethereum',
     version=read_version(),
     description=("Ethereum RPC client library for Python asyncio (PEP 3156)"),
-    long_description="\n\n".join((read('README.rst'), read('CHANGES.txt'))),
+    long_description="\n\n".join((read('README.rst'), read('CHANGES.rst'))),
     classifiers=classifiers,
     platforms=["POSIX"],
     author="Bogdan Kurinnyi",
