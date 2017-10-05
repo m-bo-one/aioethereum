@@ -102,7 +102,7 @@ The aioethereum is offered under MIT license.
     :target: https://travis-ci.org/DeV1doR/aioethereum
     :alt: Travis CI status
 
-.. |docs| image:: https://readthedocs.org/projects/aioethereum/badge/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/aioethereum/badge/?version=stable
     :target: https://aioethereum.readthedocs.io/
     :alt: Documentation status
 
