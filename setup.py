@@ -5,16 +5,22 @@ import platform
 from setuptools import setup, find_packages
 
 
-install_requires = ['aiohttp', 'async-timeout']
+uvloop = 'uvloop>=0.8.1'
+install_requires = [
+    'aiohttp>=2.2.5',
+    'async-timeout>=1.4.0',
+]
 if platform.python_implementation() == 'CPython':
     install_requires.append('ujson')
 
 PY_VER = sys.version_info
 
-if PY_VER >= (3, 4):
+if PY_VER >= (3, 5) and sys.platform != "win32":
+    install_requires.append(uvloop)
+elif PY_VER >= (3, 4):
     pass
 elif PY_VER >= (3, 3):
-    install_requires.append('asyncio')
+    install_requires.append('asyncio>=3.4.3')
 else:
     raise RuntimeError("aioethereum doesn't support Python version prior 3.3")
 

@@ -12,6 +12,7 @@ Features
 
 ================================  ==============================
 ujson_ support                      Yes
+uvloop_ support                     Yes
 High-level APIs                     Yes
 HTTP support                        Yes
 Unix domain socket (IPC) support    Yes
@@ -91,6 +92,7 @@ The aioethereum is offered under MIT license.
 .. _asyncio: https://pypi.python.org/pypi/asyncio
 .. _aiohttp: https://pypi.python.org/pypi/aiohttp
 .. _ujson: https://pypi.python.org/pypi/ujson
+.. _uvloop: https://pypi.python.org/pypi/uvloop
 .. _travis: https://travis-ci.org/DeV1doR/aioethereum
 
 

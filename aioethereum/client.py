@@ -14,6 +14,12 @@ import aiohttp
 import async_timeout
 
 try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except ImportError:
+    pass
+
+try:
     import ujson as json  # noqa
 except ImportError:
     import json
@@ -223,6 +229,9 @@ def create_ethereum_client(uri, timeout=60, *, loop=None):
 
     :return: :class:`BaseAsyncIOClient` instance.
     """
+    if loop is None:
+        loop = asyncio.get_event_loop()
+
     presult = urlparse(uri)
     if presult.scheme in ('ipc', 'unix'):
         reader, writer = yield from asyncio.open_unix_connection(presult.path,
