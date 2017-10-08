@@ -19,7 +19,7 @@ Unix domain socket (IPC) support    Yes
 SSL/TLS support                     Yes
 Tested CPython versions             `3.4, 3.5, 3.6 <travis_>`_
 Tested Geth versions                `1.7.0 <travis_>`_
-Implemented RPC apis                `db, eth, miner, net, personal, shh, txpool, web3`
+Implemented RPC apis                `admin, db, debug, eth, miner, net, personal, shh, txpool, web3`
 ================================  ==============================
 
 Documentation
