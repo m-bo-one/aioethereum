@@ -12,7 +12,9 @@ import pytest
 import aioethereum
 
 
-NodeServer = namedtuple('NodeServer', 'dir unixsocket http_address coinbase')
+NodeServer = namedtuple('NodeServer',
+                        ('dir unixsocket http_address ws_address coinbase '
+                         'host rpcport wsport apis'))
 
 
 @pytest.fixture(scope='session')
@@ -63,18 +65,24 @@ def server(unused_port):
                                 'node')
         unix_domain_path = 'unix://%s' % os.path.join(node_dir, 'testnet',
                                                       'geth.ipc')
-        host, port = ('localhost', unused_port())
+        host, port, wsport = ('localhost', unused_port(), unused_port())
         node_port = unused_port()
+        apis = ['eth', 'web3', 'net', 'personal', 'db', 'shh', 'txpool',
+                'miner', 'admin', 'debug']
 
         process = subprocess.Popen(['make', '-C', node_dir, 'start',
+                                    'HOST=%s' % host,
                                     'NODE_PORT=%s' % node_port,
-                                    'RPC_PORT=%s' % port],
+                                    'RPC_PORT=%s' % port,
+                                    'WS_PORT=%s' % wsport,
+                                    'APIS=%s' % ','.join(apis)],
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT)
         stdout, _ = process.communicate()
         assert process.returncode == 0, stdout.decode('utf-8')
 
         base_uri = 'http://%s:%s' % (host, port)
+        ws_uri = 'http://%s:%s' % (host, wsport)
         tried = 0
         max_tries = 5
         while tried < max_tries:
@@ -100,7 +108,9 @@ def server(unused_port):
         stdout, _ = process.communicate()
 
         coinbase = re.search(r'\"(.*?)\"', stdout.decode('utf-8')).group(1)
-        server = NodeServer(node_dir, unix_domain_path, base_uri, coinbase)
+        server = NodeServer(os.path.join(node_dir, 'testnet'),
+                            unix_domain_path, base_uri, ws_uri, coinbase,
+                            host, port, wsport, apis)
         yield server
     finally:
         process = subprocess.Popen(['make', '-C', node_dir, 'stop'],

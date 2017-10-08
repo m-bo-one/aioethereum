@@ -9,7 +9,10 @@ PSWD=$(shell cat $(PSWD_FILE))
 AMOUNT=1
 
 NODE_PORT = 30305
+HOST = 'localhost'
 RPC_PORT = 8545
+WS_PORT = 8546
+APIS = 'eth,web3,net,personal,db,shh,txpool,miner,admin'
 
 BASE_ARGS=--dev \
 	--nodiscover \
@@ -21,10 +24,15 @@ BASE_ARGS=--dev \
 ARGS1=$(BASE_ARGS) \
 	--port=$(NODE_PORT) \
 	--rpc \
-	--rpcaddr="127.0.0.1" \
+	--rpcaddr=$(HOST) \
 	--rpcport=$(RPC_PORT) \
-	--rpcapi="eth,web3,net,personal,db,shh,txpool,miner,admin" \
+	--rpcapi=$(APIS) \
 	--rpccorsdomain="*" \
+	--ws \
+	--wsaddr=$(HOST) \
+	--wsport=$(WS_PORT) \
+	--wsapi=$(APIS) \
+	--wsorigins="*" \
 	--mine \
 	--minerthreads=1
 
