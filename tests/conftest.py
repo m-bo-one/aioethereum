@@ -91,7 +91,7 @@ def server(unused_port):
                 break
             except URLError:
                 tried += 1
-                print('Waiting for node connection, max tries left: %d' %
+                print('\nWaiting for node connection, max tries left: %d' %
                       (max_tries - tried))
                 time.sleep(1)
 
@@ -106,6 +106,8 @@ def server(unused_port):
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT)
         stdout, _ = process.communicate()
+
+        print('\nNode started at %s' % base_uri)
 
         coinbase = re.search(r'\"(.*?)\"', stdout.decode('utf-8')).group(1)
         server = NodeServer(os.path.join(node_dir, 'testnet'),
