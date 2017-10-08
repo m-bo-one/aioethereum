@@ -1,3 +1,11 @@
+0.2.1 (2017-10-08)
+^^^^^^^^^^^^^^^^^^
+
+* Add admin and debug management apis;
+* Add new tests;
+* Add uvloop support (python 3.5+ required);
+
+
 0.2.0 (2017-10-05)
 ^^^^^^^^^^^^^^^^^^
 
