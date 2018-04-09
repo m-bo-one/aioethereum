@@ -256,14 +256,10 @@ def create_ethereum_client(uri, timeout=60, *, loop=None):
                                                                  loop=loop)
         return AsyncIOIPCClient(reader, writer, uri, timeout, loop=loop)
     elif presult.scheme in ('http', 'https'):
-        tls = False
-        if presult.scheme[-1] == 's':
-            tls = True
+        tls = presult.scheme[-1] == 's'
         netloc = presult.netloc.split(':')
-        if len(netloc) == 1:
-            host, port = netloc[0], 80
-        else:
-            host, port = netloc
+        host = netloc.pop(0)
+        port = netloc.pop(0) if netloc else (443 if tls else 80)
         return AsyncIOHTTPClient(host, port, tls, timeout, loop=loop)
     else:
         raise RuntimeError('This scheme does not supported.')
