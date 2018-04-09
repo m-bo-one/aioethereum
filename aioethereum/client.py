@@ -2,6 +2,7 @@ import logging
 import asyncio
 import warnings
 import abc
+import sys
 from urllib.parse import urlparse
 
 try:
@@ -100,6 +101,30 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
         return '{0}://{1}:{2}'.format(scheme, self._host, self._port)
 
     @asyncio.coroutine
+    def _post(self, data):
+
+        # Newer versions of aiohttp raise TypeError if ClientSession is used
+        # in a "non-async with" statement. This method is a workaround.
+        # See https://www.python.org/dev/peps/pep-0492/#new-syntax
+
+        contextmanager = aiohttp.ClientSession(loop=self._loop)
+        session = yield from contextmanager.__aenter__()
+        try:
+            with async_timeout.timeout(self._timeout, loop=self._loop):
+                # do not return just yet, the "else" branch needs to run too
+                r = yield from session.post(
+                    url=self._endpoint,
+                    data=json.dumps(data),
+                    headers={'Content-Type': 'application/json'}
+                )
+        except:
+            if not (yield from contextmanager.__aexit__(*sys.exc_info())):
+                raise
+        else:
+            yield from contextmanager.__aexit__(None, None, None)
+        return r
+
+    @asyncio.coroutine
     def rpc_call(self, method, params=None, id_=None):
         params = params or []
         data = {
@@ -109,14 +134,7 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
             'id': id_ or self._id,
         }
         try:
-            with aiohttp.ClientSession(loop=self._loop) as session:
-                with async_timeout.timeout(self._timeout,
-                                           loop=self._loop):
-                    r = yield from session.post(
-                        url=self._endpoint,
-                        data=json.dumps(data),
-                        headers={'Content-Type': 'application/json'}
-                    )
+            r = yield from self._post(data)
         except aiohttp.ClientConnectorError as e:
             raise ConnectionError(e)
 
