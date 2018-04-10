@@ -108,7 +108,10 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
         # See https://www.python.org/dev/peps/pep-0492/#new-syntax
 
         contextmanager = aiohttp.ClientSession(loop=self._loop)
-        session = yield from contextmanager.__aenter__()
+        try:
+            session = yield from contextmanager.__aenter__()
+        except AttributeError:
+            session = contextmanager.__enter__()
         try:
             with async_timeout.timeout(self._timeout, loop=self._loop):
                 # do not return just yet, the "else" branch needs to run too
@@ -117,11 +120,19 @@ class AsyncIOHTTPClient(BaseAsyncIOClient, RpcMixin):
                     data=json.dumps(data),
                     headers={'Content-Type': 'application/json'}
                 )
-        except:
-            if not (yield from contextmanager.__aexit__(*sys.exc_info())):
+        except:  # noqa
+            try:
+                exit = yield from contextmanager.__aexit__(*sys.exc_info())
+            except AttributeError:
+                exit = contextmanager.__exit__(*sys.exc_info())
+
+            if not exit:
                 raise
         else:
-            yield from contextmanager.__aexit__(None, None, None)
+            try:
+                yield from contextmanager.__aexit__(None, None, None)
+            except AttributeError:
+                contextmanager.__exit__(None, None, None)
         return r
 
     @asyncio.coroutine
