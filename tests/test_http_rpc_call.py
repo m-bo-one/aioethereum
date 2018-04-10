@@ -10,7 +10,8 @@ from aioethereum.errors import BadStatusError, BadJsonError, BadResponseError
 @pytest.mark.run_loop
 def test_rpc_call_with_conn_error(create_ethereum_client, loop, server):
     with mock.patch("aiohttp.client.ClientSession._request") as patched:
-        patched.side_effect = aiohttp.ClientConnectorError('refused', 'ref')
+        patched.side_effect = aiohttp.ClientConnectorError('refused',
+                                                           OSError('refused'))
         client = yield from create_ethereum_client(server.http_address,
                                                    loop=loop)
         with pytest.raises(ConnectionError) as excinfo:
