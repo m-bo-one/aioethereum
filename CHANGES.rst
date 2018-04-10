@@ -1,3 +1,10 @@
+0.2.2 (2018-04-10)
+^^^^^^^^^^^^^^^^^^
+
+* Fix bug, related to https://www.python.org/dev/peps/pep-0492/#new-syntax;
+* Fix port detection for client when only domain;
+
+
 0.2.1 (2017-10-08)
 ^^^^^^^^^^^^^^^^^^
 
